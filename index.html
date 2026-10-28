@@ -1,1 +1,483 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#110d1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="VELORA, votre cinéma personnel : films ouverts et bibliothèque vidéo.">
+<title>VELORA — Votre cinéma personnel</title>
+<style>
+:root{color-scheme:dark;--bg:#110d1c;--panel:#1d162c;--purple:#bba1ff;--muted:#b9afc9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#f7f2ff;font-family:Arial,sans-serif;padding-bottom:calc(85px + env(safe-area-inset-bottom))}
+button,input{font:inherit}
+button,a,input{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;color:inherit;touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--purple);outline-offset:4px}
+header{padding:calc(22px + env(safe-area-inset-top)) 6% 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff12}
+.logo{font-size:21px;font-weight:800;letter-spacing:5px}
+.logo span{color:var(--purple);font-family:Georgia,serif;font-style:italic;font-size:32px;margin-right:8px}
+.tag{font-size:9px;letter-spacing:2px;color:var(--muted)}
+main{max-width:1200px;margin:auto;padding:22px 5%}
+.hero{position:relative;overflow:hidden;border:1px solid #ffffff12;border-radius:18px;padding:40px 28px;background:radial-gradient(circle at 100% 20%,#68517e,transparent 65%),#1b1429}
+.hero:before{content:"";position:absolute;width:280px;height:280px;border:1px solid #ffffff25;border-radius:50%;right:-100px;top:20px;pointer-events:none}
+.eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--purple);font-weight:bold}
+h1{font-size:clamp(38px,7vw,68px);font-weight:500;letter-spacing:-2px;line-height:1.08;margin:27px 0}
+h1 em{color:#d4bfff;font-family:Georgia,serif;font-weight:400}
+.description{font-size:14px;line-height:1.8;color:#d2c5df;max-width:430px}
+.meta{font-size:11px;color:var(--muted);margin:22px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
+.primary,.secondary{padding:14px 18px;border-radius:8px;font-size:12px;font-weight:bold;min-height:46px}
+.primary{background:var(--purple);color:#201331;border:1px solid var(--purple)}
+.secondary{background:#ffffff08;border:1px solid #ffffff35}
+.hero-foot{margin-top:28px;font-size:8px;letter-spacing:1.5px;color:#c4b2d2}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:34px 0 22px}
+h2{font-weight:500;font-size:25px;letter-spacing:-.7px;margin:8px 0}
+.count{font-size:10px;color:var(--muted);white-space:nowrap}
+.filters{display:flex;gap:8px;overflow:auto;margin-bottom:25px;padding:3px}
+.filters button{border:1px solid #ffffff20;border-radius:25px;background:transparent;padding:11px 16px;color:var(--muted);white-space:nowrap;font-size:11px}
+.filters button.active{background:#bba1ff20;border-color:#bba1ff70;color:#e0d0ff}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.card{min-width:0}
+.poster{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;border:1px solid #ffffff20;background:var(--art)}
+.poster:before{content:"";position:absolute;inset:12% -25% 8% 15%;border-radius:50%;border:1px solid #ffffff40;transform:rotate(-30deg);box-shadow:inset 0 0 70px #ffffff12;pointer-events:none}
+.play{position:absolute;inset:0;width:100%;border:0;background:linear-gradient(transparent,#08061099);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;text-align:left;padding:22px}
+.play:hover{background:#ffffff12}
+.film-title{font:36px/1.05 Georgia,serif;letter-spacing:-1px;text-shadow:0 3px 20px #000}
+.film-label{font-size:7px;letter-spacing:2px;margin-top:14px;color:#dfd0ed}
+.save{position:absolute;top:10px;right:10px;border:1px solid #ffffff55;border-radius:50%;background:#160e26bb;width:38px;height:38px;font-size:22px}
+.save[aria-pressed=true]{background:var(--purple);color:#201331}
+.card h3{font-size:13px;margin:13px 0 7px}
+.card p{color:var(--muted);font-size:10px;line-height:1.6;margin:0}
+.search{display:block;width:100%;padding:16px;background:var(--panel);border:1px solid #ffffff30;border-radius:10px;color:white;font-size:16px;margin-bottom:25px}
+.notice{color:var(--muted);font-size:13px;line-height:1.8}
+.empty{text-align:center;padding:45px 15px;color:var(--muted);line-height:1.8}
+.bottom{margin-top:45px;padding:30px 0;border-top:1px solid #ffffff18}
+.bottom p{font-size:12px;color:var(--muted);line-height:1.8}
+footer{padding:10px 5% 25px;max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}
+footer span{letter-spacing:3px;font-size:12px;color:var(--muted)}
+footer button{background:none;border:0;font-size:11px;color:var(--muted);min-height:44px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;gap:4px;background:#191222f5;border-top:1px solid #ffffff20;padding:9px 5px calc(10px + env(safe-area-inset-bottom));z-index:5;backdrop-filter:blur(15px)}
+nav a{color:var(--muted);text-decoration:none;font-size:11px;padding:15px 8px;min-height:44px}
+nav a.active{color:#ddcaff;border-bottom:2px solid var(--purple)}
+dialog{background:var(--panel);color:white;border:1px solid #ffffff30;border-radius:15px;width:min(850px,94vw);max-height:90dvh;overflow:auto;padding:22px}
+dialog
+.dialog-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.dialog-top h2{font-size:22px}
+.close{background:none;border:1px solid #ffffff30;border-radius:50%;width:44px;height:44px;flex-shrink:0}
+video{width:100%;max-height:60dvh;background:black;border-radius:6px}
+dialog p{color:var(--muted);font-size:12px;line-height:1.8}
+dialog a{color:#d8c4ff}
+label{display:block;font-size:13px;margin:20px 0}
+label input:not([type=checkbox]){display:block;width:100%;margin-top:10px;padding:14px;border-radius:7px;border:1px solid #ffffff30;background:var(--bg);color:white;font-size:16px}
+.check{display:flex;align-items:center;gap:12px;line-height:1.7}
+.check input{width:20px;height:20px;flex-shrink:0}
+.danger{background:none;border:1px solid #f3a3bd;color:#ffc1d5;border-radius:7px;padding:13px}
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:#e2d4ff;color:#241530;padding:14px 20px;border-radius:9px;font-size:12px;z-index:10;max-width:90vw;width:max-content}
+[hidden]{display:none!important}
+@media(max-width:760px){
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 15px}
+.film-title{font-size:29px}
+.play{padding:20px 14px}
+.tag{display:none}
+.hero{padding:32px 25px}
+}
+</style>
+</head>
+<body>
+<header>
+<div class="logo"><span>V</span>VELORA</div>
+<span class="tag">LE CINÉMA VOUS APPARTIENT</span>
+</header>
 
+<main>
+<section id="home">
+<div class="hero">
+<p class="eyebrow">LA SÉLECTION VELORA / 01</p>
+<h1>Un autre regard.<br>Un autre <em>monde.</em></h1>
+<p class="description">Découvrez Sintel : une quête au-delà des frontières. Une première rencontre avec le cinéma libre.</p>
+<p class="meta">FANTASY · BLENDER FOUNDATION · BANDE-ANNONCE</p>
+<div class="actions">
+<button class="primary" id="hero-play">▶ Voir la bande-annonce</button>
+<button class="secondary" id="hero-save">＋ Ma liste</button>
+</div>
+<p class="hero-foot">UNE CRÉATION OUVERTE · CC BY 3.0</p>
+</div>
+</section>
+
+<section>
+<div class="heading">
+<div>
+<p class="eyebrow">VOTRE ESPACE CINÉMA</p>
+<h2 id="section-title">Des histoires qui restent.</h2>
+</div>
+<span class="count" id="count"></span>
+</div>
+<input class="search" id="search" type="search" placeholder="Un titre, un genre, une envie…" aria-label="Rechercher" hidden>
+
+<div class="filters" id="filters" aria-label="Genres">
+<button class="active" data-genre="Tous">Tout explorer</button>
+<button data-genre="Animation">Animation</button>
+<button data-genre="Fantasy">Fantasy</button>
+<button data-genre="Science-fiction">Science-fiction</button>
+</div>
+
+<div id="library-tools" hidden>
+<p class="notice">Ajoutez des liens vidéo directs que vous êtes autorisé à regarder. Votre bibliothèque reste dans ce navigateur, sur cet appareil.</p>
+<button class="primary" id="add">＋ Ajouter une vidéo</button>
+<br><br>
+</div>
+
+<div class="grid" id="grid"></div>
+<p class="empty" id="empty" hidden></p>
+</section>
+
+<section class="bottom">
+<p class="eyebrow">VOTRE ESPACE. VOTRE CINÉMA.</p>
+<h2>Le grand écran vous suit.</h2>
+<p>Films ouverts, favoris et vidéos personnelles.<br>Un seul endroit pour vos prochaines découvertes.</p>
+</section>
+</main>
+
+<footer>
+<span>VELORA</span>
+<button id="about">Sources & informations</button>
+</footer>
+
+<nav aria-label="Navigation">
+<a href="#accueil" data-view="accueil">Découvrir</a>
+<a href="#recherche" data-view="recherche">Recherche</a>
+<a href="#favoris" data-view="favoris">Ma liste</a>
+<a href="#bibliotheque" data-view="bibliotheque">Bibliothèque</a>
+</nav>
+
+<dialog id="player-dialog" aria-labelledby="player-title">
+<div class="dialog-top">
+<h2 id="player-title"></h2>
+<button class="close" data-close aria-label="Fermer">✕</button>
+</div>
+<video id="video" controls playsinline preload="metadata"></video>
+<p id="status" role="status"></p>
+<p id="credit"></p>
+<button class="danger" id="remove" hidden>Supprimer de ma bibliothèque</button>
+</dialog>
+
+<dialog id="add-dialog" aria-labelledby="add-title">
+<div class="dialog-top">
+<h2 id="add-title">Votre cinéma personnel</h2>
+<button class="close" data-close aria-label="Fermer">✕</button>
+</div>
+<form id="form">
+<label>Titre
+<input name="title" required maxlength="100" placeholder="Le nom de votre vidéo">
+</label>
+<label>Lien direct HTTPS
+<input name="url" type="url" required placeholder="https://exemple.com/film.mp4">
+</label>
+<p>Sur iPhone, utilisez un MP4 H.264/AAC ou un flux HLS compatible. Une page YouTube ou Netflix n’est pas un lien vidéo direct.</p>
+<label class="check">
+<input name="rights" type="checkbox" required>
+Je dispose des droits nécessaires pour regarder ce contenu.
+</label>
+<button class="primary" type="submit">Ajouter à ma bibliothèque</button>
+<p id="form-error" role="alert"></p>
+</form>
+</dialog>
+
+<dialog id="about-dialog" aria-labelledby="about-title">
+<div class="dialog-top">
+<h2 id="about-title">Le cinéma ouvert</h2>
+<button class="close" data-close aria-label="Fermer">✕</button>
+</div>
+<p>VELORA présente des créations de la Blender Foundation. Sintel et Big Buck Bunny sont proposés en bandes-annonces ; Elephants Dream et Tears of Steel en films complets.</p>
+<p>Sintel, Big Buck Bunny et Tears of Steel : Creative Commons Attribution 3.0. Elephants Dream : Creative Commons Attribution 2.5, Blender Foundation / Netherlands Media Art Institute. Chaque lecteur contient un lien vers sa source officielle.</p>
+<p>Les affiches abstraites sont des créations VELORA. Les médias sont diffusés depuis les serveurs Blender, qui contrôlent leur disponibilité.</p>
+<p>Vos favoris, votre progression et vos liens sont conservés uniquement dans ce navigateur. Effacer les données du site les supprime. Aucune synchronisation ni sauvegarde cloud n’est proposée.</p>
+<p>La lecture nécessite Internet. L’installation PWA sera ajoutée à la prochaine étape.</p>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+
+const catalog = [
+{
+id:"sintel",title:"Sintel",genre:"Fantasy",year:2010,
+edition:"Bande-annonce",
+url:"https://download.blender.org/durian/trailer/sintel_trailer-720p.mp4",
+source:"https://durian.blender.org/",
+credit:"Blender Foundation · CC BY 3.0",
+art:"linear-gradient(145deg,#856174,#40314f,#171021)"
+},
+{
+id:"bunny",title:"Big Buck Bunny",genre:"Animation",year:2008,
+edition:"Bande-annonce",
+url:"https://download.blender.org/peach/trailer/trailer_iphone.m4v",
+source:"https://peach.blender.org/",
+credit:"Blender Foundation · CC BY 3.0",
+art:"linear-gradient(145deg,#779674,#3b5850,#16282a)"
+},
+{
+id:"steel",title:"Tears of Steel",genre:"Science-fiction",year:2012,
+edition:"Film complet · 12 min",
+url:"https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov",
+source:"https://mango.blender.org/",
+credit:"Blender Foundation · CC BY 3.0",
+art:"linear-gradient(145deg,#5a839a,#303e60,#17172d)"
+},
+{
+id:"dream",title:"Elephants Dream",genre:"Animation",year:2006,
+edition:"Film complet · 11 min",
+url:"https://download.blender.org/ED/elephantsdream-720-h264-st-aac.mov",
+source:"https://orange.blender.org/",
+credit:"Blender Foundation / Netherlands Media Art Institute · CC BY 2.5",
+art:"linear-gradient(145deg,#ad8060,#674638,#241726)"
+}
+];
+
+function read(key,fallback){
+try{return JSON.parse(localStorage.getItem("velora."+key))??fallback;}
+catch{return fallback;}
+}
+function write(key,value){
+try{localStorage.setItem("velora."+key,JSON.stringify(value));}
+catch{toast("Stockage indisponible : modifications conservées pour cette session seulement.");}
+}
+function validURL(value){
+try{
+const u=new URL(value);
+return u.protocol==="https:"&&!u.username&&!u.password;
+}catch{return false;}
+}
+
+let favorites=read("favorites",[]);
+if(!Array.isArray(favorites))favorites=[];
+let library=read("library",[]);
+if(!Array.isArray(library))library=[];
+library=library.filter(x=>x&&typeof x.id==="string"&&typeof x.title==="string"&&validURL(x.url));
+let progress=read("progress",{});
+if(!progress||typeof progress!=="object"||Array.isArray(progress))progress={};
+
+let view="accueil",genre="Tous",current=null,lastSave=0;
+
+function toast(text){
+$("#toast").textContent=text;
+$("#toast").hidden=false;
+clearTimeout(toast.timer);
+toast.timer=setTimeout(()=>$("#toast").hidden=true,3500);
+}
+function node(tag,className,text){
+const element=document.createElement(tag);
+if(className)element.className=className;
+if(text!==undefined)element.textContent=text;
+return element;
+}
+function normalize(text){
+return text.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+}
+function toggleFavorite(id){
+favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
+write("favorites",favorites);
+render();
+toast(favorites.includes(id)?"Ajouté à votre liste":"Retiré de votre liste");
+}
+
+function render(){
+$("#home").hidden=view!=="accueil";
+$("#search").hidden=view!=="recherche";
+$("#filters").hidden=view!=="accueil";
+$("#library-tools").hidden=view!=="bibliotheque";
+
+const titles={
+accueil:"Des histoires qui restent.",
+recherche:"Votre prochaine découverte.",
+favoris:"Ma liste",
+bibliotheque:"Ma bibliothèque"
+};
+$("#section-title").textContent=titles[view];
+
+document.querySelectorAll("[data-view]").forEach(a=>{
+const active=a.dataset.view===view;
+a.classList.toggle("active",active);
+if(active)a.setAttribute("aria-current","page");
+else a.removeAttribute("aria-current");
+});
+
+let items=view==="bibliotheque"?library:[...catalog,...library];
+if(view==="accueil")items=catalog.filter(x=>genre==="Tous"||x.genre===genre);
+if(view==="favoris")items=items.filter(x=>favorites.includes(x.id));
+if(view==="recherche"){
+const query=normalize($("#search").value.trim());
+items=items.filter(x=>normalize(x.title+" "+x.genre).includes(query));
+}
+
+$("#count").textContent=items.length+" CONTENU"+(items.length>1?"S":"");
+$("#grid").replaceChildren();
+
+items.forEach(item=>{
+const card=node("article","card");
+const poster=node("div","poster");
+poster.style.setProperty("--art",item.art||"linear-gradient(145deg,#8664ac,#392348,#171021)");
+
+const play=node("button","play");
+play.setAttribute("aria-label","Regarder "+item.title);
+play.append(
+node("span","film-title",item.title),
+node("span","film-label",item.custom?"VOTRE COLLECTION":"BLENDER OPEN MOVIE")
+);
+play.onclick=()=>openPlayer(item);
+
+const saved=favorites.includes(item.id);
+const save=node("button","save",saved?"✓":"+");
+save.setAttribute("aria-pressed",String(saved));
+save.setAttribute("aria-label",(saved?"Retirer des favoris : ":"Ajouter aux favoris : ")+item.title);
+save.onclick=()=>toggleFavorite(item.id);
+
+poster.append(play,save);
+card.append(
+poster,
+node("h3","",item.title),
+node("p","",item.custom?"Vidéo personnelle":item.year+" · "+item.genre),
+node("p","",item.custom?"Votre lien autorisé":item.edition)
+);
+$("#grid").append(card);
+});
+
+$("#empty").hidden=items.length!==0;
+$("#empty").textContent=view==="favoris"
+?"Touchez + sur un film pour le retrouver ici."
+:view==="bibliotheque"
+?"Ajoutez votre premier lien vidéo autorisé."
+:"Aucun résultat. Essayez un autre titre ou genre.";
+
+$("#hero-save").textContent=favorites.includes("sintel")?"✓ Dans ma liste":"＋ Ma liste";
+$("#hero-save").setAttribute("aria-pressed",String(favorites.includes("sintel")));
+}
+
+function route(){
+const hash=location.hash.slice(1);
+view=["accueil","recherche","favoris","bibliotheque"].includes(hash)?hash:"accueil";
+render();
+if(view==="recherche")$("#search").focus();
+}
+window.addEventListener("hashchange",route);
+$("#search").addEventListener("input",render);
+
+document.querySelectorAll("[data-genre]").forEach(button=>{
+button.onclick=()=>{
+genre=button.dataset.genre;
+document.querySelectorAll("[data-genre]").forEach(b=>{
+b.classList.toggle("active",b===button);
+b.setAttribute("aria-pressed",String(b===button));
+});
+render();
+};
+});
+
+function saveProgress(){
+const video=$("#video");
+if(current&&Number.isFinite(video.duration)&&video.duration>0){
+progress[current.id]={time:video.currentTime,duration:video.duration};
+write("progress",progress);
+}
+}
+function openPlayer(item){
+current=item;
+lastSave=0;
+$("#player-title").textContent=item.title;
+$("#status").textContent="Chargement…";
+$("#credit").replaceChildren();
+if(item.custom){
+$("#credit").textContent="Vidéo personnelle · La disponibilité dépend du fournisseur de votre lien.";
+}else{
+$("#credit").append(document.createTextNode(item.edition+" · "+item.credit+" · "));
+const link=node("a","","Source officielle");
+link.href=item.source;
+link.target="_blank";
+link.rel="noopener noreferrer";
+$("#credit").append(link);
+}
+$("#remove").hidden=!item.custom;
+$("#video").src=item.url;
+$("#player-dialog").showModal();
+$("#video").load();
+$("#video").play().catch(()=>{
+$("#status").textContent="Touchez Lecture pour démarrer.";
+});
+}
+
+$("#video").addEventListener("loadedmetadata",()=>{
+const p=progress[current?.id];
+if(p&&p.time>0&&p.time<$("#video").duration-5)$("#video").currentTime=p.time;
+$("#status").textContent="";
+});
+$("#video").addEventListener("playing",()=>$("#status").textContent="");
+$("#video").addEventListener("error",()=>{
+$("#status").textContent="Lecture indisponible. Vérifiez votre connexion ou le lien. Sur iPhone, utilisez une vidéo MP4 H.264/AAC ou HLS compatible.";
+});
+$("#video").addEventListener("timeupdate",()=>{
+if(Date.now()-lastSave>5000){
+saveProgress();
+lastSave=Date.now();
+}
+});
+$("#video").addEventListener("pause",saveProgress);
+$("#video").addEventListener("ended",saveProgress);
+
+$("#player-dialog").addEventListener("close",()=>{
+saveProgress();
+$("#video").pause();
+$("#video").removeAttribute("src");
+$("#video").load();
+current=null;
+});
+
+document.querySelectorAll("[data-close]").forEach(button=>{
+button.onclick=()=>button.closest("dialog").close();
+});
+$("#hero-play").onclick=()=>openPlayer(catalog[0]);
+$("#hero-save").onclick=()=>toggleFavorite("sintel");
+$("#add").onclick=()=>$("#add-dialog").showModal();
+$("#about").onclick=()=>$("#about-dialog").showModal();
+
+$("#form").onsubmit=event=>{
+event.preventDefault();
+const data=new FormData(event.target);
+const title=String(data.get("title")).trim();
+const url=String(data.get("url")).trim();
+if(!title||!validURL(url)){
+$("#form-error").textContent="Saisissez un titre et un lien HTTPS valide, sans identifiants.";
+return;
+}
+library.push({
+id:"personal-"+crypto.randomUUID(),
+title,url,genre:"Personnel",custom:true
+});
+write("library",library);
+event.target.reset();
+$("#form-error").textContent="";
+$("#add-dialog").close();
+render();
+};
+
+$("#remove").onclick=()=>{
+const id=current.id;
+$("#player-dialog").close();
+library=library.filter(x=>x.id!==id);
+favorites=favorites.filter(x=>x!==id);
+delete progress[id];
+write("library",library);
+write("favorites",favorites);
+write("progress",progress);
+render();
+toast("Vidéo supprimée de votre bibliothèque");
+};
+
+route();
+</script>
+</body>
+</html>
